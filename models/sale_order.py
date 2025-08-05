@@ -15,8 +15,19 @@ class SaleOrder(models.Model):
         ('medium', 'Medium'),
         ('high', 'High')
     ], default='medium')
-    delivery_date = fields.Date()
+    priority_score = fields.Integer(compute="_compute_priority_score", store=True)
+    delivery_date = fields.Datetime(related="date_order")
     margin = fields.Float(compute="_compute_margin", store=True)
+
+    @api.depends('priority')
+    def _compute_priority_score(self):
+        for rec in self:
+            if rec.priority == 'low':
+                rec.priority_score = 1
+            elif rec.priority == 'medium':
+                rec.priority_score = 2
+            elif rec.priority == 'high':
+                rec.priority_score = 3
 
     @api.depends('order_line.product_template_id', 'order_line.product_template_id.standard_price', "order_line.product_uom_qty", "amount_total")
     def _compute_margin(self):

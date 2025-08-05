@@ -31,14 +31,17 @@
     <record id="view_order_list_inherit_approval" model="ir.ui.view">
         <field name="name">sale.order.list.inherit.approval</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="inherit_id" ref="sale.sale_order_list_upload"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="priority"/>
                 <!-- Optional to show, Hidden by default -->
-                <field name="priority" optional="hide"/>
                 <field name="delivery_date" optional="hide"/>
                 <field name="approval_state" optional="hide"/>
                 <field name="margin" optional="hide"/>
+            </xpath>
+            <xpath expr="/list" position="attributes">
+                <attribute name="default_order">priority_score desc</attribute>
             </xpath>
         </field>
     </record>
