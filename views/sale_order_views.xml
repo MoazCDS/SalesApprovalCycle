@@ -1,0 +1,45 @@
+<odoo>
+    <record id="view_order_form_inherit_approval" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.approval</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Approval Info">
+                    <group>
+                        <field name="approval_state" readonly="1"/>
+                        <field name="priority"/>
+                        <field name="delivery_date"/>
+                        <field name="margin" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//header/button[@name='action_quotation_send']" position="after">
+                <button name="action_request_approval" string="Request Approval" type="object"
+                    invisible="approval_state != 'draft'"/>
+                <button name="action_approve" string="Approve" type="object"
+                    groups="sales_team.group_sale_manager"
+                    invisible="approval_state != 'pending'" class="btn-primary"/>
+                <button name="action_reject" string="Reject" type="object"
+                    groups="sales_team.group_sale_manager"
+                    invisible="approval_state != 'pending'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_list_inherit_approval" model="ir.ui.view">
+        <field name="name">sale.order.list.inherit.approval</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <!-- Optional to show, Hidden by default -->
+                <field name="priority" optional="hide"/>
+                <field name="delivery_date" optional="hide"/>
+                <field name="approval_state" optional="hide"/>
+                <field name="margin" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
